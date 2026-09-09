@@ -41,5 +41,5 @@ rotateBtn.addEventListener('click', function() {
 
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((rotationAngle * Math.PI) / 180);
-    ctx.drawImage(currentImage, -currentImage.width / 2, -currentImage.height / 2);
+    ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
 });

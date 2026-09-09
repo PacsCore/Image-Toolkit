@@ -132,3 +132,13 @@ resetColorsBtn.addEventListener('click', function() {
     ctx.putImageData(preFilterSnapshot, 0, 0);
     preFilterSnapshot = null;
 });
+
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', function() {
+    if (!currentImage) return;
+
+    const link = document.createElement('a');
+    link.download = 'edited_image.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}

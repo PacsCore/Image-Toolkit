@@ -10,20 +10,21 @@
     <header>
         <h1>Image Toolkit</h1>
     </header>
-    <input type="file" id="imageInput" accept="image/*">
-    <canvas id="imageCanvas" width="600" height="600"></canvas>
-    <button id="rotateBtn">Rotate</button>
-
-    <div>
+        <div class="toolbar">
+        <input type="file" id="imageInput" accept="image/*">
         <label>Width: <input type="number" id="widthInput"></label>
         <label>Height: <input type="number" id="heightInput"></label>
         <label><input type="checkbox" id="lockRatio"> Lock Aspect Ratio</label>
         <button id="resizeBtn">Resize</button>
+
+        <button id="rotateBtn">Rotate</button>
         <button id="grayscaleBtn">Grayscale</button>
         <button id="sepiaBtn">Sepia</button>
         <button id="resetColorsBtn">Reset Colors</button>
         <button id="downloadBtn">Download</button>
     </div>
+
+    <canvas id="imageCanvas" width="600" height="600"></canvas>
 
     <script src="script.js"></script>
 </body>

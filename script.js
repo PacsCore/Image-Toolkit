@@ -78,7 +78,6 @@ function resetToOriginal() {
 
 grayscaleBtn.addEventListener('click', function() {
     if (!currentImage) return;
-    resetToOriginal();
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
@@ -95,7 +94,6 @@ grayscaleBtn.addEventListener('click', function() {
 
 sepiaBtn.addEventListener('click', function() {
     if (!currentImage) return;
-    resetToOriginal();
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;

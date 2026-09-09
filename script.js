@@ -141,4 +141,4 @@ downloadBtn.addEventListener('click', function() {
     link.download = 'edited_image.png';
     link.href = canvas.toDataURL();
     link.click();
-}
+});

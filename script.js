@@ -48,7 +48,7 @@ rotateBtn.addEventListener('click', function() {
 
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((rotationAngle * Math.PI) / 180);
-    ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
+    ctx.drawImage(currentImage, -currentImage.width / 2, -currentImage.height / 2);
 });
 
 resizeBtn.addEventListener('click', function() {
@@ -63,4 +63,52 @@ resizeBtn.addEventListener('click', function() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(currentImage, 0, 0, newWidth, newHeight);
+});
+
+const grayscaleBtn = document.getElementById('grayscaleBtn');
+const sepiaBtn = document.getElementById('sepiaBtn');
+
+function resetToOriginal() {
+    canvas.width = currentImage.width;
+    canvas.height = currentImage.height;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(currentImage, 0, 0);
+}
+
+grayscaleBtn.addEventListener('click', function() {
+    if (!currentImage) return;
+    resetToOriginal();
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const gray = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = gray;
+        data[i + 1] = gray;
+        data[i + 2] = gray;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+});
+
+sepiaBtn.addEventListener('click', function() {
+    if (!currentImage) return;
+    resetToOriginal();
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        data[i]     = (r * 0.393) + (g * 0.769) + (b * 0.189);
+        data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);
+        data[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131);
+    }
+
+    ctx.putImageData(imageData, 0, 0);
 });

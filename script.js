@@ -1,7 +1,23 @@
 const imageInput = document.getElementById('imageInput');
-const Canvas = document.getElementById('imageCanvas');
-const ctx = Canvas.getContext('2d');
+const canvas = document.getElementById('imageCanvas');
+const ctx = canvas.getContext('2d');
 
-imageInput.addEventListener('change', function() {
-    console.log('file selected');
+imageInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const img = new Image();
+
+        img.onload = function () {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+        };
+
+        img.src = e.target.result;
+    };
+ reader.readAsDataURL(file);
 });

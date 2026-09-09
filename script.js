@@ -2,6 +2,8 @@ const imageInput = document.getElementById('imageInput');
 const canvas = document.getElementById('imageCanvas');
 const ctx = canvas.getContext('2d');
 let currentImage = null;
+let baseWidth = 0;
+let baseHeight = 0;
 const widthInput = document.getElementById('widthInput');
 const heightInput = document.getElementById('heightInput');
 const lockRatio = document.getElementById('lockRatio');
@@ -23,6 +25,8 @@ imageInput.addEventListener('change', function(event) {
 
             widthInput.value = currentImage.width;
             heightInput.value = currentImage.height;
+            baseWidth = currentImage.width;
+            baseHeight = currentImage.height;
         };
 
         currentImage.src = e.target.result;
@@ -40,15 +44,15 @@ rotateBtn.addEventListener('click', function() {
     rotationAngle += 90;
 
     const isSideways = rotationAngle % 180 !== 0;
-    canvas.width = isSideways ? currentImage.height : currentImage.width;
-    canvas.height = isSideways ? currentImage.width : currentImage.height;
+    canvas.width = isSideways ? baseHeight : baseWidth;
+    canvas.height = isSideways ? baseWidth : baseHeight;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((rotationAngle * Math.PI) / 180);
-    ctx.drawImage(currentImage, -currentImage.width / 2, -currentImage.height / 2);
+    ctx.drawImage(currentImage, -baseWidth / 2, -baseHeight / 2, baseWidth, baseHeight);
 });
 
 resizeBtn.addEventListener('click', function() {
@@ -59,6 +63,8 @@ resizeBtn.addEventListener('click', function() {
 
     canvas.width = newWidth;
     canvas.height = newHeight;
+    baseWidth = newWidth;
+    baseHeight = newHeight;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -67,6 +73,14 @@ resizeBtn.addEventListener('click', function() {
 
 const grayscaleBtn = document.getElementById('grayscaleBtn');
 const sepiaBtn = document.getElementById('sepiaBtn');
+const resetColorsBtn = document.getElementById('resetColorsBtn');
+let preFilterSnapshot = null;
+
+function saveSnapshotIfNeeded() {
+    if (!preFilterSnapshot) {
+        preFilterSnapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+}
 
 function resetToOriginal() {
     canvas.width = currentImage.width;
@@ -77,6 +91,7 @@ function resetToOriginal() {
 }
 
 grayscaleBtn.addEventListener('click', function() {
+    saveSnapshotIfNeeded();
     if (!currentImage) return;
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -93,6 +108,7 @@ grayscaleBtn.addEventListener('click', function() {
 });
 
 sepiaBtn.addEventListener('click', function() {
+    saveSnapshotIfNeeded();
     if (!currentImage) return;
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -109,4 +125,10 @@ sepiaBtn.addEventListener('click', function() {
     }
 
     ctx.putImageData(imageData, 0, 0);
+});
+
+resetColorsBtn.addEventListener('click', function() {
+    if (!preFilterSnapshot) return;
+    ctx.putImageData(preFilterSnapshot, 0, 0);
+    preFilterSnapshot = null;
 });
